@@ -12,4 +12,9 @@ public class SingleController implements Controller {
     public SingleController(Lift lift) {
         this.lift = lift;
     }
+
+    @Override
+    public void call(int floorNumber) {
+
+    }
 }

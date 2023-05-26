@@ -5,7 +5,7 @@ import lift.Lift;
 /**
  * TODO Document
  */
-public class SingleController {
+public class SingleController implements Controller {
 
     Lift lift;
 

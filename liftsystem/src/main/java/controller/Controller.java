@@ -5,4 +5,6 @@ package controller;
  */
 public interface Controller {
     void call(int floorNumber);
+
+    void travel();
 }

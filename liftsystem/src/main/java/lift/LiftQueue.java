@@ -111,4 +111,11 @@ public class LiftQueue {
             }
         }
     }
+
+    /**
+     * @return true if the Queue has another Stop.
+     */
+    public boolean hasNext() {
+        return (head != null);
+    }
 }

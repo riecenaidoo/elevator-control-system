@@ -12,4 +12,8 @@ public interface Lift {
     enum State {
         TRAVELLING, STOPPED
     }
+
+    void addStop(int floorStop);
+
+    void travel();
 }

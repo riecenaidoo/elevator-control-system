@@ -12,12 +12,19 @@ public class LiftSystem {
     static int lowestFloor = 1;
     static int highestFloor = 10;
 
-//    static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         Controller controlUnit = new SingleController(new BasicLift());
 
-        controlUnit.call(getFloorNumber());
+        for (int i = 0; i < 5; i++) {
+            controlUnit.call(getFloorNumber());
+        }
+
+        controlUnit.travel();
+
+        for (int i = 0; i < 5; i++) {
+            controlUnit.call(getFloorNumber());
+        }
     }
 
     /**
@@ -29,7 +36,7 @@ public class LiftSystem {
 
         do {
             try {
-                System.out.println("(Floor Num?) > ");
+                System.out.print("(Floor Num?) > ");
                 floor = Integer.parseInt(getInput());
             } catch (NumberFormatException e) {
                 System.out.println("[HELP] Please input a number only.");

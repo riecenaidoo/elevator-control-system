@@ -3,7 +3,8 @@ package controller;
 import lift.Lift;
 
 /**
- * TODO Document
+ * Represents a basic Lift Controller that manages a single Lift.
+ * In this case, it is simply a wrapper for the Lift classes inner methods.
  */
 public class SingleController implements Controller {
 
@@ -15,6 +16,11 @@ public class SingleController implements Controller {
 
     @Override
     public void call(int floorNumber) {
+        lift.addStop(floorNumber);
+    }
 
+    @Override
+    public void travel() {
+        lift.travel();
     }
 }

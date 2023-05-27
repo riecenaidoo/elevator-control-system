@@ -23,6 +23,7 @@ public class BasicLift implements Lift {
      *
      * @param floorStop The floor number to stop at.
      */
+    @Override
     public void addStop(int floorStop) {
         if (this.floor == floorStop)
             throw new RuntimeException("[BAD] Lift should not be instructed to travel to a floor it is already on.");
@@ -31,26 +32,32 @@ public class BasicLift implements Lift {
     }
 
     /**
-     * Travels to the next stop in the Lift's queue.
+     * Traverses the Lift's Queue of Stops.
      */
+    @Override
     public void travel() {
-        int nextStop = queue.popNextStop();
-        direction = (nextStop > floor) ? Direction.RISING : Direction.FALLING;
-        int step = (direction.equals(Direction.RISING)) ? 1 : -1;
-        state = State.TRAVELLING;
-
         new Thread(() -> {
-            for (int i = floor; i < nextStop; i += step) {
-                try {
-                    Thread.sleep(500);  // Simulate Travel Time.
-                } catch (InterruptedException e) {
-                    throw new RuntimeException("[BAD] Lift thread was interrupted during travel time.");
-                }
-                System.out.printf("[Lift] Visited floor %d.\n", i);
-            }
+            while (queue.hasNext()) {
+                int nextStop = queue.popNextStop();
+                direction = (nextStop > floor) ? Direction.RISING : Direction.FALLING;
+                int step = (direction.equals(Direction.RISING)) ? 1 : -1;
+                state = State.TRAVELLING;
 
-            System.out.printf("[Lift] Arrived at floor %d.\n", nextStop);
-            state = State.STOPPED;
+                while (state.equals(State.TRAVELLING)) {
+                    try {
+                        Thread.sleep(500);  // Simulate Travel Time.
+                        floor += step;
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException("[BAD] Lift thread was interrupted during travel time.");
+                    }
+
+                    state = (floor != nextStop) ? State.TRAVELLING : State.STOPPED;
+                    switch (state) {
+                        case TRAVELLING -> System.out.printf("[Lift] Visited floor %d.\n", floor);
+                        case STOPPED -> System.out.printf("[Lift] Arrived at floor %d.\n", nextStop);
+                    }
+                }
+            }
         }).start();
     }
 }

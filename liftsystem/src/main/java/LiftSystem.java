@@ -12,7 +12,7 @@ public class LiftSystem {
     static int lowestFloor = 1;
     static int highestFloor = 10;
 
-    static Scanner sc = new Scanner(System.in);
+//    static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
         Controller controlUnit = new SingleController(new BasicLift());
@@ -52,6 +52,7 @@ public class LiftSystem {
      * @return non-empty user input from the terminal.
      */
     protected static String getInput() {
+        Scanner sc = new Scanner(System.in);
         String input;
 
         do {

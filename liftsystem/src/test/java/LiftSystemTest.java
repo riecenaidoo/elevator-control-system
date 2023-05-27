@@ -27,7 +27,7 @@ class LiftSystemTest {
         System.setIn(standardIn);
     }
 
-    static void mockIn(String mockInput) {
+    void mockIn(String mockInput) {
         System.setIn(new ByteArrayInputStream(mockInput.getBytes()));
     }
 

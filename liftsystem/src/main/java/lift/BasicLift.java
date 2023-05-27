@@ -21,20 +21,20 @@ public class BasicLift implements Lift {
     /**
      * Adds another stop to the Lift's queue.
      *
-     * @param floor The floor number to stop at.
+     * @param floorStop The floor number to stop at.
      */
-    public void addStop(int floor) {
-        if (this.floor == floor)
+    public void addStop(int floorStop) {
+        if (this.floor == floorStop)
             throw new RuntimeException("[BAD] Lift should not be instructed to travel to a floor it is already on.");
 
-        queue.addStop(floor);
+        queue.addStop(this.floor, floorStop);
     }
 
     /**
      * Travels to the next stop in the Lift's queue.
      */
     public void travel() {
-        int nextStop = queue.getNextStop();
+        int nextStop = queue.popNextStop();
         direction = (nextStop > floor) ? Direction.RISING : Direction.FALLING;
         int step = (direction.equals(Direction.RISING)) ? 1 : -1;
         state = State.TRAVELLING;

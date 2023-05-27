@@ -97,17 +97,17 @@ public class LiftQueue {
              */
             Stop temp = head;
             boolean increasing = (temp.floor < temp.next.floor);
-            while (head.next != null) {
-                if ((increasing && temp.floor < currentFloor
-                        && currentFloor < temp.next.floor) ||
-                        (!increasing && temp.floor > currentFloor && currentFloor > temp.next.floor)) {
+            while (temp.next != null) {
+                if ((increasing && temp.floor < destinationFloor
+                        && destinationFloor < temp.next.floor) ||
+                        (!increasing && temp.floor > destinationFloor && destinationFloor > temp.next.floor)) {
                     {
-                        Stop insert = new Stop(currentFloor);
+                        Stop insert = new Stop(destinationFloor);
                         insert.next = temp.next;
                         temp.next = insert;
                     }
                 }
-                temp = head.next;   // Traverse
+                temp = temp.next;   // Traverse
             }
         }
     }

@@ -31,6 +31,13 @@ public class LiftQueue {
     }
 
     /**
+     * @return true if the Queue has another Stop.
+     */
+    public boolean hasNext() {
+        return (head != null);
+    }
+
+    /**
      * Pops the first Stop out the Queue and
      * retrieves the floor number associated with it.
      *
@@ -58,43 +65,59 @@ public class LiftQueue {
      * @param destinationFloor of the Stop to be added.
      */
     public void addStop(int currentFloor, int destinationFloor) {
-        if (head == null) {
 
-            head = new Stop(destinationFloor);
-            tail = head;
+        switch (getInsertionStyle(currentFloor, destinationFloor)) {
+            case CREATE -> {
+                Stop temp = new Stop(destinationFloor);
+                head = temp;
+                tail = temp;
+                pivot = temp;
+            }
+            case ENQUEUE -> {
+                Stop temp = new Stop(destinationFloor);
+                tail.next = temp;
+                if (pivot == tail) pivot = temp;
+                tail = temp;
+            }
+            case INSERT -> {
 
-        } else if (isNewHead(currentFloor, destinationFloor)) {
-            Stop temp = new Stop(destinationFloor);
-            temp.next = head;
-            head = temp;
+                boolean increasing = (head.floor < head.next.floor);
 
-        } else if (isNewTail(destinationFloor)) {
-            Stop temp = new Stop(destinationFloor);
-            tail.next = temp;
-            tail = temp;
-        } else {
-            /*
-                If none of the above conditions are met,
-                the destinationFloor is to be inserted
-                somewhere inside the Queue.
-             */
-            Stop temp = head;
-            boolean increasing = (temp.floor < temp.next.floor);
-            while (temp.next != null) {
-                if ((increasing && temp.floor < destinationFloor
-                        && destinationFloor < temp.next.floor) ||
-                        (!increasing && temp.floor > destinationFloor && destinationFloor > temp.next.floor)) {
-                    {
-                        Stop insert = new Stop(destinationFloor);
-                        insert.next = temp.next;
-                        temp.next = insert;
-                    }
+                Stop temp;
+                // Determine which section of the Queue to insert in.
+                if ((increasing && (destinationFloor < tail.floor)) ||
+                        (!increasing && (destinationFloor > tail.floor))) {
+                    temp = head;
+                } else {
+                    temp = pivot;
+                    increasing = !increasing;   // The pivot is going in the opposite direction
                 }
-                temp = temp.next;   // Traverse
+
+                while (temp.next != null) {
+                    if ((increasing && temp.floor < destinationFloor
+                            && destinationFloor < temp.next.floor) ||
+                            (!increasing && temp.floor > destinationFloor && destinationFloor > temp.next.floor)) {
+                        {
+                            Stop insert = new Stop(destinationFloor);
+                            insert.next = temp.next;
+                            temp.next = insert;
+                        }
+                    }
+                    temp = temp.next;   // Traverse
+                }
+            }
+            case JUMP -> {
+                Stop temp = new Stop(destinationFloor);
+                temp.next = head;
+                head = temp;
+            }
+            case PIVOT -> {
+                Stop temp = new Stop(destinationFloor);
+                tail.next = temp;
+                tail = temp;
             }
         }
     }
-
 
     /**
      * To join ahead of all positions in the Lift Queue.
@@ -104,13 +127,12 @@ public class LiftQueue {
      * @param destinationFloor of the Stop to be added.
      * @return true if the Stop should join at the head of the queue.
      */
-    private boolean isNewHead(int currentFloor, int destinationFloor) {
+    private boolean isJump(int currentFloor, int destinationFloor) {
         return (destinationFloor > currentFloor)
                 && (destinationFloor < head.floor) ||
                 ((destinationFloor < currentFloor)
                         && (destinationFloor > head.floor));
     }
-
 
     /**
      * If the destination is not inside the range
@@ -120,17 +142,42 @@ public class LiftQueue {
      * @param destinationFloor of the Stop to be added.
      * @return true if the Stop should join at the tail of the queue.
      */
-    private boolean isNewTail(int destinationFloor) {
+    private boolean isEnqueue(int destinationFloor) {
         return ((destinationFloor < head.floor)
                 && (destinationFloor < tail.floor)) ||
                 ((destinationFloor > head.floor) && (destinationFloor > tail.floor));
     }
 
+    private boolean isPivot(int destinationFloor) {
 
-    /**
-     * @return true if the Queue has another Stop.
-     */
-    public boolean hasNext() {
-        return (head != null);
+        if (head.next == null) return false;
+
+        boolean increasing = (head.floor < head.next.floor);
+
+        return (increasing && (destinationFloor < tail.floor)) ||
+                (!increasing && (destinationFloor > tail.floor));
+    }
+
+    private InsertionStyle getInsertionStyle(int currentFloor, int destinationFloor) {
+        if (head == null) return InsertionStyle.CREATE;
+
+        if (isJump(currentFloor, destinationFloor)) return InsertionStyle.JUMP;
+
+        if (isEnqueue(destinationFloor)) {
+            if (isPivot(destinationFloor)) return InsertionStyle.PIVOT;
+
+            return InsertionStyle.ENQUEUE;
+        }
+
+        /*
+            If none of the above conditions are met,
+            the destinationFloor is to be inserted
+            somewhere inside the Queue.
+         */
+        return InsertionStyle.INSERT;
+    }
+
+    enum InsertionStyle {
+        CREATE, ENQUEUE, INSERT, JUMP, PIVOT
     }
 }

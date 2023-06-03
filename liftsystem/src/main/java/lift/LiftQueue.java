@@ -59,6 +59,87 @@ public class LiftQueue {
     }
 
     /**
+     * To join ahead of all positions in the Lift Queue.
+     * The Stop must be on a floor that would be passed along the way.
+     *
+     * @param currentFloor     that the Lift is currently at.
+     * @param destinationFloor of the Stop to be added.
+     * @return true if the Stop should join at the head of the queue.
+     */
+    private boolean isJump(int currentFloor, int destinationFloor) {
+        return (destinationFloor > currentFloor)
+                && (destinationFloor < head.floor) ||
+                ((destinationFloor < currentFloor)
+                        && (destinationFloor > head.floor));
+    }
+
+    /**
+     * If the destination is not inside the range
+     * between the first floor and last floor in the Queue,
+     * it is added to the end.
+     *
+     * @param destinationFloor of the Stop to be added.
+     * @return true if the Stop should join at the tail of the queue.
+     */
+    private boolean isEnqueue(int destinationFloor) {
+        return ((destinationFloor < head.floor)
+                && (destinationFloor < tail.floor)) ||
+                ((destinationFloor > head.floor) && (destinationFloor > tail.floor));
+    }
+
+    /**
+     * @param destinationFloor of the Stop to be added.
+     * @return true if the Stop would cause the Lift to pivot (switch direction).
+     */
+    private boolean isPivot(int destinationFloor) {
+
+        if (head.next == null) return false;
+
+        boolean increasing = (head.floor < head.next.floor);
+
+        return (increasing && (destinationFloor < tail.floor)) ||
+                (!increasing && (destinationFloor > tail.floor));
+    }
+
+    /**
+     * @param currentFloor     that the Lift is currently at.
+     * @param destinationFloor of the Stop to be added.
+     * @return the style of insertion this Stop should be added with.
+     */
+    private InsertionStyle getInsertionStyle(int currentFloor, int destinationFloor) {
+        if (head == null) return InsertionStyle.CREATE;
+
+        if (isJump(currentFloor, destinationFloor)) return InsertionStyle.JUMP;
+
+        if (isEnqueue(destinationFloor)) {
+            if (isPivot(destinationFloor)) return InsertionStyle.PIVOT;
+
+            return InsertionStyle.ENQUEUE;
+        }
+
+        /*
+            If none of the above conditions are met,
+            the destinationFloor is to be inserted
+            somewhere inside the Queue.
+         */
+        return InsertionStyle.INSERT;
+    }
+
+    /**
+     * The five distinct methods of insertion into a LiftQueue.
+     * <ul>
+     *      <li>Create - Initialises the Queue.</li>
+     *      <li>Enqueue - Traditional FIFO Enqueue.</li>
+     *      <li>Insert - Priority based insertion into the Queue.</li>
+     *      <li>Jump - Insertion to the head of the Queue.</li>
+     *      <li>Pivot - An Enqueue that would change the direction the Queue is moving.</li>
+     * </ul>
+     */
+    enum InsertionStyle {
+        CREATE, ENQUEUE, INSERT, JUMP, PIVOT
+    }
+
+    /**
      * Adds a Stop to the Queue.
      *
      * @param currentFloor     that the Lift is currently at.
@@ -117,67 +198,5 @@ public class LiftQueue {
                 tail = temp;
             }
         }
-    }
-
-    /**
-     * To join ahead of all positions in the Lift Queue.
-     * The Stop must be on a floor that would be passed along the way.
-     *
-     * @param currentFloor     that the Lift is currently at.
-     * @param destinationFloor of the Stop to be added.
-     * @return true if the Stop should join at the head of the queue.
-     */
-    private boolean isJump(int currentFloor, int destinationFloor) {
-        return (destinationFloor > currentFloor)
-                && (destinationFloor < head.floor) ||
-                ((destinationFloor < currentFloor)
-                        && (destinationFloor > head.floor));
-    }
-
-    /**
-     * If the destination is not inside the range
-     * between the first floor and last floor in the Queue,
-     * it is added to the end.
-     *
-     * @param destinationFloor of the Stop to be added.
-     * @return true if the Stop should join at the tail of the queue.
-     */
-    private boolean isEnqueue(int destinationFloor) {
-        return ((destinationFloor < head.floor)
-                && (destinationFloor < tail.floor)) ||
-                ((destinationFloor > head.floor) && (destinationFloor > tail.floor));
-    }
-
-    private boolean isPivot(int destinationFloor) {
-
-        if (head.next == null) return false;
-
-        boolean increasing = (head.floor < head.next.floor);
-
-        return (increasing && (destinationFloor < tail.floor)) ||
-                (!increasing && (destinationFloor > tail.floor));
-    }
-
-    private InsertionStyle getInsertionStyle(int currentFloor, int destinationFloor) {
-        if (head == null) return InsertionStyle.CREATE;
-
-        if (isJump(currentFloor, destinationFloor)) return InsertionStyle.JUMP;
-
-        if (isEnqueue(destinationFloor)) {
-            if (isPivot(destinationFloor)) return InsertionStyle.PIVOT;
-
-            return InsertionStyle.ENQUEUE;
-        }
-
-        /*
-            If none of the above conditions are met,
-            the destinationFloor is to be inserted
-            somewhere inside the Queue.
-         */
-        return InsertionStyle.INSERT;
-    }
-
-    enum InsertionStyle {
-        CREATE, ENQUEUE, INSERT, JUMP, PIVOT
     }
 }

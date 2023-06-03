@@ -128,22 +128,64 @@ class LiftQueueTest {
          * the order of delivery should be [5-10] - ascending, and [3-1] - descending,
          * because the Lift is moving down from floor 10.
          */
-        @Test
-        void secondaryQueueAscending() {
-            LiftQueue queue = new LiftQueue();
-            queue.addStop(4, 5);
-            queue.addStop(4, 6);
-            queue.addStop(4, 10);
-            queue.addStop(4, 1);
-            queue.addStop(4, 2);
-            queue.addStop(4, 3);
+        @Nested
+        class secondaryQueue {
 
-            assertEquals(5, queue.popNextStop());
-            assertEquals(6, queue.popNextStop());
-            assertEquals(10, queue.popNextStop());
-            assertEquals(3, queue.popNextStop());
-            assertEquals(2, queue.popNextStop());
-            assertEquals(1, queue.popNextStop());
+            @Test
+            void ascending() {
+                LiftQueue queue = new LiftQueue();
+                queue.addStop(4, 5);
+                queue.addStop(4, 6);
+                queue.addStop(4, 10);
+                queue.addStop(4, 1);
+                queue.addStop(4, 2);
+                queue.addStop(4, 3);
+
+                assertEquals(5, queue.popNextStop());
+                assertEquals(6, queue.popNextStop());
+                assertEquals(10, queue.popNextStop());
+                assertEquals(3, queue.popNextStop());
+                assertEquals(2, queue.popNextStop());
+                assertEquals(1, queue.popNextStop());
+            }
+
+            @Test
+            void descending() {
+                LiftQueue queue = new LiftQueue();
+                queue.addStop(8, 5);
+                queue.addStop(8, 6);
+                queue.addStop(8, 7);
+                queue.addStop(8, 10);
+                queue.addStop(8, 9);
+
+                assertEquals(7, queue.popNextStop());
+                assertEquals(6, queue.popNextStop());
+                assertEquals(5, queue.popNextStop());
+                assertEquals(9, queue.popNextStop());
+                assertEquals(10, queue.popNextStop());
+            }
+
+            /**
+             * Tests that the Queue can handle
+             * multiple pivot points, in this case,
+             * pivots on floors 8 and 1.
+             */
+            @Test
+            void multiplePivotPoints() {
+                LiftQueue queue = new LiftQueue();
+                queue.addStop(6, 7);
+                queue.addStop(6, 8);
+                queue.addStop(6, 1);
+                queue.addStop(6, 5);
+                queue.addStop(6, 9);
+
+                assertEquals(7, queue.popNextStop());
+                assertEquals(8, queue.popNextStop());
+                assertEquals(5, queue.popNextStop());
+                assertEquals(1, queue.popNextStop());
+                assertEquals(9, queue.popNextStop());
+            }
         }
+
     }
 }

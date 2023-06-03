@@ -13,6 +13,7 @@ public class LiftQueue {
 
     Stop head;
     Stop tail;
+    Stop pivot;
 
     static class Stop {
         int floor;
@@ -62,34 +63,16 @@ public class LiftQueue {
             head = new Stop(destinationFloor);
             tail = head;
 
-        } else if ((destinationFloor > currentFloor)
-                && (destinationFloor < head.floor) ||
-                ((destinationFloor < currentFloor)
-                        && (destinationFloor > head.floor))) {
-
-            /*
-                To join ahead of all positions in the Lift Queue.
-                The Stop must be on a floor that would be passed along the way.
-             */
-
+        } else if (isNewHead(currentFloor, destinationFloor)) {
             Stop temp = new Stop(destinationFloor);
             temp.next = head;
             head = temp;
 
-        } else if (((destinationFloor < head.floor)
-                && (destinationFloor < tail.floor)) ||
-                ((destinationFloor > head.floor) && (destinationFloor > tail.floor))) {
-
-            /*
-                If the destination is not inside the range
-                between the first floor and last floor in the Queue,
-                it is added to the end.
-             */
+        } else if (isNewTail(destinationFloor)) {
             Stop temp = new Stop(destinationFloor);
             tail.next = temp;
             tail = temp;
         } else {
-
             /*
                 If none of the above conditions are met,
                 the destinationFloor is to be inserted
@@ -111,6 +94,38 @@ public class LiftQueue {
             }
         }
     }
+
+
+    /**
+     * To join ahead of all positions in the Lift Queue.
+     * The Stop must be on a floor that would be passed along the way.
+     *
+     * @param currentFloor     that the Lift is currently at.
+     * @param destinationFloor of the Stop to be added.
+     * @return true if the Stop should join at the head of the queue.
+     */
+    private boolean isNewHead(int currentFloor, int destinationFloor) {
+        return (destinationFloor > currentFloor)
+                && (destinationFloor < head.floor) ||
+                ((destinationFloor < currentFloor)
+                        && (destinationFloor > head.floor));
+    }
+
+
+    /**
+     * If the destination is not inside the range
+     * between the first floor and last floor in the Queue,
+     * it is added to the end.
+     *
+     * @param destinationFloor of the Stop to be added.
+     * @return true if the Stop should join at the tail of the queue.
+     */
+    private boolean isNewTail(int destinationFloor) {
+        return ((destinationFloor < head.floor)
+                && (destinationFloor < tail.floor)) ||
+                ((destinationFloor > head.floor) && (destinationFloor > tail.floor));
+    }
+
 
     /**
      * @return true if the Queue has another Stop.

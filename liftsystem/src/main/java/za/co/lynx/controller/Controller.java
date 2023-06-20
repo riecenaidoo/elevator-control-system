@@ -1,4 +1,4 @@
-package controller;
+package za.co.lynx.controller;
 
 /**
  * TODO Document

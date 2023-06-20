@@ -1,4 +1,4 @@
-package lift;
+package za.co.lynx.lift;
 
 /**
  * A basic Lift, without additional real-world properties (such as velocity, braking, etc.),

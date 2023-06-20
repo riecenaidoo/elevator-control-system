@@ -1,4 +1,4 @@
-package lift;
+package za.co.lynx.lift;
 
 /**
  * TODO Document

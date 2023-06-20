@@ -1,6 +1,8 @@
-import controller.Controller;
-import controller.SingleController;
-import lift.BasicLift;
+package za.co.lynx;
+
+import za.co.lynx.controller.Controller;
+import za.co.lynx.controller.SingleController;
+import za.co.lynx.lift.BasicLift;
 
 import java.util.Scanner;
 

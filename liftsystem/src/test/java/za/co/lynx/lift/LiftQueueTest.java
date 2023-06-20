@@ -1,4 +1,4 @@
-package lift;
+package za.co.lynx.lift;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

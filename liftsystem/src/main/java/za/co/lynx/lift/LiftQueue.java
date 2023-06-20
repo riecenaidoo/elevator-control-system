@@ -1,4 +1,4 @@
-package lift;
+package za.co.lynx.lift;
 
 /**
  * Represents a FIFO* style Queue system for a Lift that

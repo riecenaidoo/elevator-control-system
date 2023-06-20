@@ -1,4 +1,4 @@
-package lift;
+package za.co.lynx.controller;
 
 import org.junit.jupiter.api.Test;
 
@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * TODO Document & Test
  */
-class BasicLiftTest {
+class SingleControllerTest {
+
     /**
      * Dummy test for REPO structure.
      */

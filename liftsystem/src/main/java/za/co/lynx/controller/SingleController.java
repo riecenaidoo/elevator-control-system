@@ -1,6 +1,6 @@
-package controller;
+package za.co.lynx.controller;
 
-import lift.Lift;
+import za.co.lynx.lift.Lift;
 
 /**
  * Represents a basic Lift Controller that manages a single Lift.

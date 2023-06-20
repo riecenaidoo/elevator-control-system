@@ -28,7 +28,7 @@ test:
 
 run:
 	@cd liftsystem; \
-	mvn exec:exec
+	mvn exec:java
 
 
 clean:

@@ -1,18 +1,17 @@
-SHELL = /usr/bin/env bash
 
 .PHONY = build test run clean
 
 
 
 help:
-	@printf "\
+	@printf "\n\
 	------------------------------------------------------------------\n\
 	build:\t\tCompiles the project code.\n\
 	test:\t\tRuns the test harness for the project.\n\
 	run:\t\tLaunches the Lift Control System program.\n\
 	clean:\t\tRemoves compiled code from the project directory.\n\
 	------------------------------------------------------------------\n\
-	"
+	\n"
 
 
 build:
